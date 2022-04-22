@@ -1,4 +1,9 @@
 
+// Project Butterfly | Annabel Zhang
+// Animal Behavior
+// Final Project
+// 2022-04-21
+
 var c = document.getElementById('garden');
 var dotButton = document.getElementById('buttonCircle');
 

@@ -1,3 +1,9 @@
+
+# Project Butterfly | Annabel Zhang
+# Animal Behavior
+# Final Project
+# 2022-04-21
+
 from flask import Flask, request, render_template, redirect, session, jsonify
 
 app = Flask(__name__)
