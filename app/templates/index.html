@@ -1,4 +1,4 @@
-<!-- 
+<!--
 Project Butterfly | Annabel Zhang
 Animal Behavior
 Final Project
@@ -18,8 +18,8 @@ Final Project
 
   <style>
     canvas { position: absolute; border: 1px solid black;}
-    /* #butterfly {z-index: 2; } */
-    #garden { z-index: 1; }
+    #butterfly {z-index: 2;}
+    #garden {z-index: 1;}
   </style>
 
 
@@ -29,12 +29,12 @@ Final Project
 
   <br>
 
-  <div>
-    <button id="buttonCircle">
+  <div class="buttons">
+    <button id="buttonSpawn">
       Spawn Butterflies
     </button>
 
-    <button id="buttonDVD">
+    <button id="buttonStart">
       Start
     </button>
 
@@ -49,6 +49,7 @@ Final Project
   </div>
 
   <div class="thegarden">
+    <canvas width=800 height=600 id="butterfly"></canvas>
     <canvas width=800 height=600 id="garden"></canvas>
   </div>
 
