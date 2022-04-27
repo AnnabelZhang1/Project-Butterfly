@@ -49,6 +49,8 @@ butterflyDerp1.src = '../static/img/ya_love.png';
 let butterflyDerp2 = document.createElement("img");
 butterflyDerp2.src = '../static/img/ya_love.png';
 
+
+// Functions
 function drawPetals(x, y) {
   ctx.beginPath();
   ctx.arc(x, y-20, 20, 0, 360);
@@ -63,13 +65,10 @@ function drawPetals(x, y) {
   ctx.fill();
 };
 
-// Functions
 window.onload = drawGarden = () => {
     console.log("drawGarden invoked...")
-    // var mouseX = e.offsetX
-    // var mouseY = e.offsetY
-    // console.log ("mouseclick registered at ", mouseX, mouseY);
 
+    //petals
     drawPetals(600, 320);
     drawPetals(350, 180);
 
@@ -81,12 +80,6 @@ window.onload = drawGarden = () => {
     ctx.fillStyle = "yellow";
     ctx.fill();
 };
-
-// var drawButterfly = () => {
-//   console.log("drawButterfly invoked...")
-//   ctx2.drawImage(butterflyDerp, 0, 0, 40, 30);
-//   ctx2.drawImage(butterflyDerp2, 240, 50, 40, 30);
-// };
 
 
 // var dvdx = 0;
@@ -158,52 +151,14 @@ function spawn(){
   }
 };
 
-// function spawn(){
-//
-//   console.log("butterfly is being drawn");
-//   console.log(canSpawn);
-//   let x = Math.random(800);
-//   let y = Math.random(600);
-//   //random spawn
-//   if (canSpawn === true){
-//     // let x = Math.random(800);
-//     // let y = Math.random(600);
-//     ctx2.drawImage(butterflyDerp, x, y, 40, 30);
-//     console.log("drawn one butterfly");
-//   };
-//
-//
-//   canSpawn = false;
-//
-//   //current coords
-//   dvdx += dx;
-//   dvdy += dy;
-//
-//   if (canSpawn === false){
-//     ctx2.drawImage(butterflyDerp, dvdx, dvdy, 40, 30);
-//   }
-//
-//   if (dvdx <= 0  || dvdx >= c.width - 120 ) {
-//     dx = dx * -1;
-//   }
-//   if (dvdy <= 0 || dvdy >= c.height - 80 ) {
-//     dy = dy *-1;
-//   }
-// };
 
-// counter = 0;
 var move = () => {
 
-  // ctx2.globalCompositeOperation = 'destination-over';
-  // ctx2.clearRect(0, 0, c2.width, c2.height);
   console.log("butterfly should be moving");
   window.cancelAnimationFrame(requestID);
   requestID = window.requestAnimationFrame(move);
   ctx2.clearRect(0, 0, c2.width, c2.height);
 
-  //current coords
-  // dvdx += dx;
-  // dvdy += dy;
 
   // spawn(template);
   spawn();
@@ -212,22 +167,8 @@ var move = () => {
     ctx2.drawImage(butterflyDerp1, butterfly1[0], butterfly1[1], 40, 30);
   }
 
-  // ctx2.drawImage(butterflyDerp, dvdx, dvdy, 40, 30);
-
-  // ctx2.drawImage(butterflyDerp2, dvdx, dvdy, 40, 30);
-
-  // if butterfly hits wall
-  // if (dvdx <= 0  || dvdx >= c.width - 120 ) {
-  //   dx = dx * -1;
-  // }
-  // if (dvdy <= 0 || dvdy >= c.height - 80 ) {
-  //   dy = dy *-1;
-  // }
-
   console.log(butterfly0[0] + "DVDX0");
   console.log(butterfly1[0] + "DVDX1");
-
-  // requestID = window.requestAnimationFrame(move);
 };
 
 var stop = () => {
