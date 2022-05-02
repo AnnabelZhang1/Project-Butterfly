@@ -22,7 +22,6 @@ var requestID;
 var flower1 = {"x": 600, "y": 320, "sweetness": 0, "color":"red"};
 var flower2 = {"x": 350, "y": 180, "sweetness": 0, "color":"red"};
 
-
 //color levels (0 to 5)
 var red = 4;
 var yellow = 3;
@@ -30,15 +29,32 @@ var pink = 4;
 var black = 0;
 
 //butterfly coords
-var butterfly0 = [0, 0];
-var butterfly1 = [0, 0];
+var totalB = 2;
+
+// var butterflyList = [];
+//
+// for (let i = 0; i < 2; i++){
+//   var name = "butterfly";
+//   var name1 = "butterfly" + i;
+//   butterflyList.push(name1);
+// }
+// console.log(butterflyList);
+
+
+//max 10 butterflies [x][y][dx][dy]
+var butterflyCoords = new Array(totalB);
+
+for (var i = 0; i < butterflyCoords.length; i++) {
+  butterflyCoords[i] = new Array(4);
+}
+
 
 // Loads in all the images
 // let garden = document.createElement("img");
 // garden.src = '../static/img/???.png';
 
-let butterfly = document.createElement("img");
-butterfly.src = '../static/img/demob.png';
+// let butterfly0 = document.createElement("img");
+// butterfly0.src = '../static/img/demob.png';
 
 let butterflyDerp0 = document.createElement("img");
 butterflyDerp0.src = '../static/img/ya_love.png';
@@ -82,9 +98,6 @@ window.onload = drawGarden = () => {
 };
 
 
-// var dvdx = 0;
-// var dvdy = 0;
-
 let dx,dy;
 
 function gcd_funct(x, y) {
@@ -112,34 +125,35 @@ function spawn(){
   //random spawn
   if (canSpawn === true){
 
-      butterfly0[0] = Math.random()*800;
-      butterfly0[1] = Math.random()*600;
+      for (let i = 1; i <= totalB; i++){
+        //sets random coords per butterfly
+        butterflyCoords[i][0] = Math.random()*800;
+        butterflyCoords[i][1] = Math.random()*600;
+        console.log("X: " + butterflyCoords[i][0] + " | Y: " + butterflyCoords[i][1]);
+        //draws butterfly
+        ctx2.drawImage(butterflyDerp0, butterflyCoords[i][0], butterflyCoords[i][1], 40, 30);
+        console.log("drawn one butterfly");
+      }
 
-      console.log("X: " + butterfly0[0] + " | Y: " + butterfly0[1]);
-      ctx2.drawImage(butterflyDerp0, butterfly0[0], butterfly0[1], 40, 30);
-      console.log("drawn one butterfly");
-
-      butterfly1[0] = Math.random()*800;
-      butterfly1[1] = Math.random()*600;
-
-      console.log("X: " + butterfly1[0] + " | Y: " + butterfly1[1]);
-      ctx2.drawImage(butterflyDerp1, butterfly1[0], butterfly1[1], 40, 30);
-      console.log("drawn one butterfly");
     }
 
 
   canSpawn = false;
 
   //current coords
-  butterfly0[0] += dx;
-  butterfly0[1] += dy;
+  for (let i = 1; i <= totalB; i++){
+    butterflyCoords[i][0] += dx;
+    butterflyCoords[i][1] += dy;
 
-  butterfly1[0] += dx;
-  butterfly1[1] += dy;
+    // butterfly1[0] += dx;
+    // butterfly1[1] += dy;
+  }
+
 
   if (canSpawn === false){
-    ctx2.drawImage(butterflyDerp0, butterfly0[0], butterfly0[1], 40, 30);
-    ctx2.drawImage(butterflyDerp1, butterfly1[0], butterfly1[1], 40, 30);
+    for (let i = 1; i <= totalB; i++){
+      ctx2.drawImage(butterflyDerp0, butterflyCoords[i][0], butterflyCoords[i][1], 40, 30);
+    // ctx2.drawImage(butterflyDerp1, butterfly1[0], butterfly1[1], 40, 30);
     console.log("butterfly drawn successfully");
   }
 
@@ -162,10 +176,10 @@ var move = () => {
 
   // spawn(template);
   spawn();
-  if (canSpawn === false){
-    ctx2.drawImage(butterflyDerp0, butterfly0[0], butterfly0[1], 40, 30);
-    ctx2.drawImage(butterflyDerp1, butterfly1[0], butterfly1[1], 40, 30);
-  }
+  // if (canSpawn === false){
+  //   ctx2.drawImage(butterflyDerp0, butterfly0[0], butterfly0[1], 40, 30);
+  //   ctx2.drawImage(butterflyDerp1, butterfly1[0], butterfly1[1], 40, 30);
+  // }
 
   console.log(butterfly0[0] + "DVDX0");
   console.log(butterfly1[0] + "DVDX1");
