@@ -28,42 +28,40 @@ var yellow = 3;
 var pink = 4;
 var black = 0;
 
-//butterfly coords
-var totalB = 2;
+//butterfly info
+var totalB = 3;
 
-// var butterflyList = [];
-//
-// for (let i = 0; i < 2; i++){
-//   var name = "butterfly";
-//   var name1 = "butterfly" + i;
-//   butterflyList.push(name1);
-// }
-// console.log(butterflyList);
+function createButterfly(x, y, species) {
+  let butterflyImg = document.createElement("img");
+  // butterflyImg.src = '../static/img/ya_love.png';
 
+  //random species
+  //whiteC = white cabbage | blueM = blue morpho
+  var dice = Math.floor(Math.random() * 4);
+  console.log(dice);
+  var species = "none";
+      if (dice == 0){
+          species = "whiteC";
+          butterflyImg.src = '../static/img/ya_love.png';}
+      else if (dice == 1){
+          species = "blueM";
+          butterflyImg.src = '../static/img/ya_love.png';}
+      else if (dice == 2){
+          species = "clipper";
+          butterflyImg.src = '../static/img/ya_love.png';}
+      else{
+          species = "skipper";
+          butterflyImg.src = '../static/img/ya_love.png';}
 
-//max 10 butterflies [x][y][dx][dy]
-var butterflyCoords = new Array(totalB);
-
-for (var i = 0; i < butterflyCoords.length; i++) {
-  butterflyCoords[i] = new Array(4);
+  return {x: x, y: y, img: butterflyImg, species: species};
 }
 
+var butterflies = []
+for (var i = 0; i < totalB; i++) {
+  butterflies.push(createButterfly());
+}
 
-// Loads in all the images
-// let garden = document.createElement("img");
-// garden.src = '../static/img/???.png';
-
-// let butterfly0 = document.createElement("img");
-// butterfly0.src = '../static/img/demob.png';
-
-let butterflyDerp0 = document.createElement("img");
-butterflyDerp0.src = '../static/img/ya_love.png';
-
-let butterflyDerp1 = document.createElement("img");
-butterflyDerp1.src = '../static/img/ya_love.png';
-
-let butterflyDerp2 = document.createElement("img");
-butterflyDerp2.src = '../static/img/ya_love.png';
+console.log(butterflies);
 
 
 // Functions
@@ -120,48 +118,42 @@ canSpawn = true;
 function spawn(){
 
   console.log("butterfly is being drawn");
-  // console.log(canSpawn);
 
   //random spawn
   if (canSpawn === true){
 
-      for (let i = 1; i <= totalB; i++){
+      for (let i = 0; i < totalB; i++){
         //sets random coords per butterfly
-        butterflyCoords[i][0] = Math.random()*800;
-        butterflyCoords[i][1] = Math.random()*600;
-        console.log("X: " + butterflyCoords[i][0] + " | Y: " + butterflyCoords[i][1]);
+        butterflies[i].x = Math.random()*800;
+        butterflies[i].y = Math.random()*600;
+        console.log("X: " + butterflies[i].x + " | Y: " + butterflies[i].y);
         //draws butterfly
-        ctx2.drawImage(butterflyDerp0, butterflyCoords[i][0], butterflyCoords[i][1], 40, 30);
+        ctx2.drawImage(butterflies[i].img, butterflies[i].x, butterflies[i].y, 40, 30);
         console.log("drawn one butterfly");
       }
-
-    }
-
+  }
 
   canSpawn = false;
 
   //current coords
-  for (let i = 1; i <= totalB; i++){
-    butterflyCoords[i][0] += dx;
-    butterflyCoords[i][1] += dy;
-
-    // butterfly1[0] += dx;
-    // butterfly1[1] += dy;
+  for (let i = 0; i < totalB; i++){
+    butterflies[i].x += dx;
+    butterflies[i].y += dy;
   }
 
 
   if (canSpawn === false){
-    for (let i = 1; i <= totalB; i++){
-      ctx2.drawImage(butterflyDerp0, butterflyCoords[i][0], butterflyCoords[i][1], 40, 30);
-    // ctx2.drawImage(butterflyDerp1, butterfly1[0], butterfly1[1], 40, 30);
-    console.log("butterfly drawn successfully");
-  }
+    for (let i = 0; i < totalB; i++){
+      ctx2.drawImage(butterflies[i].img, butterflies[i].x, butterflies[i].y, 40, 30);
+      console.log("butterfly drawn successfully");
+    }
 
-  if (dvdx <= 0  || dvdx >= c.width - 120 ) {
-    dx = dx * -1;
-  }
-  if (dvdy <= 0 || dvdy >= c.height - 80 ) {
-    dy = dy *-1;
+    if (dvdx <= 0  || dvdx >= c.width - 120 ) {
+      dx = dx * -1;
+    }
+    if (dvdy <= 0 || dvdy >= c.height - 80 ) {
+      dy = dy *-1;
+    }
   }
 };
 
@@ -172,21 +164,11 @@ var move = () => {
   window.cancelAnimationFrame(requestID);
   requestID = window.requestAnimationFrame(move);
   ctx2.clearRect(0, 0, c2.width, c2.height);
-
-
-  // spawn(template);
   spawn();
-  // if (canSpawn === false){
-  //   ctx2.drawImage(butterflyDerp0, butterfly0[0], butterfly0[1], 40, 30);
-  //   ctx2.drawImage(butterflyDerp1, butterfly1[0], butterfly1[1], 40, 30);
-  // }
-
-  console.log(butterfly0[0] + "DVDX0");
-  console.log(butterfly1[0] + "DVDX1");
 };
 
 var stop = () => {
-  console.log("stop invoked...")
+  console.log("stop invoked...");
   console.log(requestID);
 
   window.cancelAnimationFrame(requestID);
@@ -194,14 +176,14 @@ var stop = () => {
 
 
 var clear = (e) => {
-  console.log("clear invoked...")
+  console.log("clear invoked...");
   ctx.clearRect(0, 0, c.width, c.height);
   ctx2.clearRect(0, 0, c2.width, c2.height);
 };
 
 var reset = () => {
   location.reload();
-}
+};
 
 // var template;
 //   function setTemplate(dropbox){
