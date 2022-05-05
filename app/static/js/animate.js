@@ -6,7 +6,6 @@
 
 var c = document.getElementById('garden');
 var c2 = document.getElementById('butterfly');
-var spawnButton = document.getElementById('buttonSpawn');
 var startButton = document.getElementById('buttonStart');
 var stopButton = document.getElementById('buttonStop');
 var clearButton = document.getElementById('buttonClear');
@@ -25,7 +24,7 @@ var flower2 = {"x": 350, "y": 180, "sweetness": 0, "color":"red"};
 //color levels (0 to 5)
 var red = 4;
 var yellow = 3;
-var pink = 4;
+var pink = 2;
 var black = 0;
 
 //butterfly info
@@ -33,7 +32,6 @@ var totalB = 3;
 
 function createButterfly(x, y, species) {
   let butterflyImg = document.createElement("img");
-  // butterflyImg.src = '../static/img/ya_love.png';
 
   //random species
   //whiteC = white cabbage | blueM = blue morpho
@@ -53,6 +51,9 @@ function createButterfly(x, y, species) {
           species = "skipper";
           butterflyImg.src = '../static/img/ya_love.png';}
 
+  var x = Math.random()*750;
+  var y = Math.random()*550;
+
   return {x: x, y: y, img: butterflyImg, species: species};
 }
 
@@ -65,34 +66,44 @@ console.log(butterflies);
 
 
 // Functions
-function drawPetals(x, y) {
-  ctx.beginPath();
-  ctx.arc(x, y-20, 20, 0, 360);
-  ctx.fillStyle = "red";
-  ctx.fill();
-  ctx.beginPath();
-  ctx.arc(x, y+20, 20, 0, 360);
-  ctx.arc(x-20, y, 20, 0, 360);
-  ctx.arc(x+20, y, 20, 0, 360);
+function createFlower(x, y, sweetness, color) {
+  let flowerImg = document.createElement("img");
 
-  ctx.fillStyle = "red";
-  ctx.fill();
+  var dice = Math.floor(Math.random() * 4);
+  console.log(dice);
+  var color = "none";
+      if (dice === 0){
+          color = "red";
+          flowerImg.src = '../static/img/flower.png';}
+      else if (dice === 1){
+          color = "yellow";
+          flowerImg.src = '../static/img/flower.png';}
+      else if (dice === 2){
+          color = "pink";
+          flowerImg.src = '../static/img/flower.png';}
+      else{
+          color = "black";
+          flowerImg.src = '../static/img/flower.png';}
+  var x = Math.random()*750;
+  var y = Math.random()*550;
+  var sweetness = Math.floor(Math.random()*5);
+  return {x: x, y: y, img: flowerImg, sweetness: sweetness, color: color};
 };
+
+totalF = 3;
+
+var flowers = []
+for (var i = 0; i < totalF; i++) {
+  flowers.push(createFlower());
+}
 
 window.onload = drawGarden = () => {
     console.log("drawGarden invoked...")
 
-    //petals
-    drawPetals(600, 320);
-    drawPetals(350, 180);
-
-    //flower centers
-    ctx.beginPath();
-    ctx.arc(600, 320, 20, 0, 360);
-    ctx.arc(350, 180, 20, 0, 360);
-
-    ctx.fillStyle = "yellow";
-    ctx.fill();
+    for (var i = 0; i < totalF; i++){
+      ctx.drawImage(flowers[i].img, flowers[i].x, flowers[i].y, 50, 50);
+      console.log("one flower drawn")
+    }
 };
 
 
@@ -107,6 +118,36 @@ function gcd_funct(x, y) {
     x = t;
   }
   return x;
+};
+
+function distance(x1, y1, x2, y2){
+  return Math.sqrt(Math.pow((x1-x2), 2) + Math.pow((y1-y2), 2));
+};
+
+function rest(num){
+
+};
+
+function findBestFlower(num){
+
+  var xcor = butterflies[num].x;
+  var ycor = butterflies[num].y;
+  var closest;
+  var sweetest;
+  var colorful;
+
+  //find closest flower
+  //prob want to merge sort it to highest to lowest
+  for (var i = 1; i < totalF; i++){
+    a = distance(butterflies[num].x, butterflies[num].y, flowers[i].x, flowers[i].y);
+    b = distance(butterflies[num].x, butterflies[num].y, flowers[i-1].x, flowers[i-1].y);
+    if (a > b){
+      closest = i; //flower num
+    }
+    else{
+      closest = i-1; //flower num
+    }
+  }
 };
 
 let gcd = gcd_funct(flower1["x"], flower1["y"]);
@@ -124,8 +165,6 @@ function spawn(){
 
       for (let i = 0; i < totalB; i++){
         //sets random coords per butterfly
-        butterflies[i].x = Math.random()*800;
-        butterflies[i].y = Math.random()*600;
         console.log("X: " + butterflies[i].x + " | Y: " + butterflies[i].y);
         //draws butterfly
         ctx2.drawImage(butterflies[i].img, butterflies[i].x, butterflies[i].y, 40, 30);
@@ -192,7 +231,6 @@ var reset = () => {
 //   }
 
 // Event Listeners
-// spawnButton.addEventListener("click", spawn);
 startButton.addEventListener("click", move);
 stopButton.addEventListener("click", stop);
 clearButton.addEventListener("click", clear);
