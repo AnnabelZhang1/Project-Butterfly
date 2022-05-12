@@ -1,3 +1,6 @@
 **What we need**:
 
 - Flower tracing function (how butterflies find which flowers to go to) [lines 101-116]
+
+Bugs:
+- White cabbage butterfly sometimes gets stuck between two flowers
