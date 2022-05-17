@@ -8,8 +8,10 @@ var c = document.getElementById('garden');
 var c2 = document.getElementById('butterfly');
 var startButton = document.getElementById('buttonStart');
 var stopButton = document.getElementById('buttonStop');
-var clearButton = document.getElementById('buttonClear');
 var resetButton = document.getElementById('buttonReset');
+
+var slider = document.getElementById("butterflyRange");
+var output = document.getElementById("demo");
 
 //prepare to interact with canvas in 2D
 var ctx = c.getContext("2d")
@@ -23,14 +25,66 @@ var requestID;
 // var pink = 2;
 // var black = 0;
 
-var closest;
-var sweetest;
-var colorful;
 
 //butterfly info
 var totalB = 5;
+var totalF = 10;
 
-function createButterfly(x, y, dx, dy, species) {
+// output.innerHTML = slider.value;
+// totalB = parseInt(slider.value);
+//
+// slider.oninput = function() {
+//   output.innerHTML = this.value;
+//   totalB = parseInt(slider.value);
+//   console.log(totalB + " butterflies were picked.");
+// };
+
+// function setTemplate(dropbox){
+//   totalB = document.getElementById(dropbox).value;
+//   window.alert(totalB);
+//   console.log(totalB);
+// };
+
+// console.log(totalB);
+
+
+// Functions
+function createFlower(x, y, species, sweetness, color) {
+  let flowerImg = document.createElement("img");
+
+  var dice = Math.floor(Math.random() * 4);
+
+      if (dice === 0){
+          color = "pink";
+          flowerImg.src = '../static/img/pink_flower.png';}
+      else if (dice === 1){
+          color = "red";
+          flowerImg.src = '../static/img/red_flower.png';}
+      else if (dice === 2){
+          color = "black";
+          flowerImg.src = '../static/img/black_flower.png';}
+      else{
+          color = "yellow";
+          flowerImg.src = '../static/img/yellow_flower.png';}
+
+  // flowerImg.src = '../static/img/flower.png';
+  var x = Math.random()*750;
+  var y = Math.random()*550;
+  // var x = 400;
+  // var y = 225;
+  var sweetness = Math.floor(Math.random()*5);
+  var color = Math.floor(Math.random()*4);
+  return {x: x, y: y, img: flowerImg, species: species, sweetness: sweetness, color: color};
+};
+
+var flowers = []
+for (var i = 0; i < totalF; i++) {
+  flowers.push(createFlower());
+};
+
+console.log(flowers);
+
+function createButterfly(x, y, dx, dy, species, rank) {
   let butterflyImg = document.createElement("img");
 
   //random species
@@ -56,8 +110,9 @@ function createButterfly(x, y, dx, dy, species) {
 
   var dx = Math.random()*3;
   var dy = Math.random()*4;
+  var rank = flowers;
 
-  return {x: x, y: y, dx: dx, dy: dy, img: butterflyImg, species: species};
+  return {x: x, y: y, dx: dx, dy: dy, img: butterflyImg, species: species, rank: rank};
 };
 
 var butterflies = []
@@ -68,48 +123,8 @@ for (var i = 0; i < totalB; i++) {
 console.log(butterflies);
 
 
-// Functions
-function createFlower(x, y, species, sweetness, color) {
-  let flowerImg = document.createElement("img");
-
-  var dice = Math.floor(Math.random() * 4);
-  // console.log(dice);
-  // var color = "none";
-
-      if (dice === 0){
-          color = "pink";
-          flowerImg.src = '../static/img/pink_flower.png';}
-      else if (dice === 1){
-          color = "red";
-          flowerImg.src = '../static/img/red_flower.png';}
-      else if (dice === 2){
-          color = "black";
-          flowerImg.src = '../static/img/black_flower.png';}
-      else{
-          color = "yellow";
-          flowerImg.src = '../static/img/yellow_flower.png';}
-
-  // flowerImg.src = '../static/img/flower.png';
-  var x = Math.random()*750;
-  var y = Math.random()*550;
-  // var x = 400;
-  // var y = 225;
-  var sweetness = Math.floor(Math.random()*5);
-  var color = Math.floor(Math.random()*4);
-  return {x: x, y: y, img: flowerImg, species: species, sweetness: sweetness, color: color};
-};
-
-totalF = 10;
-
-var flowers = []
-for (var i = 0; i < totalF; i++) {
-  flowers.push(createFlower());
-};
-
-console.log(flowers);
-
 window.onload = drawGarden = () => {
-    console.log("drawGarden invoked...")
+    // console.log("drawGarden invoked...")
     let garden = document.createElement("img");
     garden.src = '../static/img/garden.jpg';
     garden.addEventListener("load", () => {
@@ -199,24 +214,33 @@ function findDXDY(dice, numB, numF){
   var gcd = 50;
 
   if (dice === "closest"){
-    butterflies[numB].dx = (closest[numF].x - butterflies[numB].x)/gcd;
-    butterflies[numB].dy = (closest[numF].y - butterflies[numB].y)/gcd;
+    butterflies[numB].rank = bubbleSort("distance", numB);
+    // butterflies[numB].dx = (closest[numF].x - butterflies[numB].x)/gcd;
+    // butterflies[numB].dy = (closest[numF].y - butterflies[numB].y)/gcd;
+    butterflies[numB].dx = (butterflies[numB].rank[numF].x - butterflies[numB].x)/gcd;
+    butterflies[numB].dy = (butterflies[numB].rank[numF].y - butterflies[numB].y)/gcd;
   }
 
   else if (dice === "sweetest"){
-    butterflies[numB].dx = (sweetness[numF].x - butterflies[numB].x)/gcd;
-    butterflies[numB].dy = (sweetness[numF].y - butterflies[numB].y)/gcd;
-    console.log("Target flower x: " + sweetness[numF].x);
-    console.log("Target flower y: " + sweetness[numF].y);
+    butterflies[numB].rank = bubbleSort("sweetness", numB);
+    // butterflies[numB].dx = (sweetness[numF].x - butterflies[numB].x)/gcd;
+    // butterflies[numB].dy = (sweetness[numF].y - butterflies[numB].y)/gcd;
+    butterflies[numB].dx = (butterflies[numB].rank[numF].x - butterflies[numB].x)/gcd;
+    butterflies[numB].dy = (butterflies[numB].rank[numF].y - butterflies[numB].y)/gcd;
+    // console.log("Target flower x: " + sweetness[numF].x);
+    // console.log("Target flower y: " + sweetness[numF].y);
     // console.log(butterflies[numB].x);
     // console.log("")
   }
 
   else if (dice === "colorful"){
-    butterflies[numB].dx = (colorful[numF].x - butterflies[numB].x)/gcd;
-    butterflies[numB].dy = (colorful[numF].y - butterflies[numB].y)/gcd;
-    console.log("Target flower x: " + colorful[numF].x);
-    console.log("Target flower y: " + colorful[numF].y);
+    butterflies[numB].rank = bubbleSort("color", numB);
+    // butterflies[numB].dx = (colorful[numF].x - butterflies[numB].x)/gcd;
+    // butterflies[numB].dy = (colorful[numF].y - butterflies[numB].y)/gcd;
+    butterflies[numB].dx = (butterflies[numB].rank[numF].x - butterflies[numB].x)/gcd;
+    butterflies[numB].dy = (butterflies[numB].rank[numF].y - butterflies[numB].y)/gcd;
+    // console.log("Target flower x: " + colorful[numF].x);
+    // console.log("Target flower y: " + colorful[numF].y);
   }
   else{
     // console.log("hi");
@@ -225,25 +249,25 @@ function findDXDY(dice, numB, numF){
 
 function findBestFlower(num){
 
-  closest = bubbleSort("distance", num);
-  sweetness = bubbleSort("sweetness", num);
-  colorful = bubbleSort("color", num);
+  // closest = bubbleSort("distance", num);
+  // sweetness = bubbleSort("sweetness", num);
+  // colorful = bubbleSort("color", num);
 
   //flying
   //skipper butterfly (likes closest flowers)
   // console.log("seeing if butterflies are skippers");
   if (butterflies[num].species === "skipper"){
-    console.log("it is a skipper!");
+    // console.log("it is a skipper!");
     findDXDY("closest", num, 0);
   }
   //white cabbage butterfly (likes most colorful flowers)
   else if (butterflies[num].species === "whiteC"){
-    console.log("it is a white cabbage butterfly!");
+    // console.log("it is a white cabbage butterfly!");
     findDXDY("colorful", num, totalF - 1);
     // console.log("Am looking for flower " + );
   }
   else if (butterflies[num].species === "blueM"){
-    console.log("it's a blue morpho butterfly!");
+    // console.log("it's a blue morpho butterfly!");
     findDXDY("sweetest", num, totalF - 1);
   }
   else{
@@ -256,17 +280,17 @@ canSpawn = true;
 
 function spawn(){
 
-  console.log("butterfly is being drawn");
+  // console.log("butterfly is being drawn");
 
   //random spawn
   if (canSpawn === true){
 
       for (let i = 0; i < totalB; i++){
         //sets random coords per butterfly
-        console.log("X: " + butterflies[i].x + " | Y: " + butterflies[i].y);
+        // console.log("X: " + butterflies[i].x + " | Y: " + butterflies[i].y);
         //draws butterfly
         ctx2.drawImage(butterflies[i].img, butterflies[i].x, butterflies[i].y, 70, 70);
-        console.log("drawn one butterfly");
+        // console.log("drawn one butterfly");
       };
   }
 
@@ -279,21 +303,20 @@ function spawn(){
 
     butterflies[i].x += butterflies[i].dx;
     butterflies[i].y += butterflies[i].dy;
-    console.log("DX: " + butterflies[i].dx + ", DY: " + butterflies[i].dy);
+    // console.log("DX: " + butterflies[i].dx + ", DY: " + butterflies[i].dy);
   };
 
   if (canSpawn === false){
     for (let i = 0; i < totalB; i++){
       ctx2.drawImage(butterflies[i].img, butterflies[i].x, butterflies[i].y, 70, 70);
-      console.log("butterfly drawn successfully");
+      // console.log("butterfly drawn successfully");
     };
   }
 };
 
 
 var move = () => {
-
-  console.log("butterfly should be moving");
+  // console.log("butterfly should be moving");
   window.cancelAnimationFrame(requestID);
   requestID = window.requestAnimationFrame(move);
   ctx2.clearRect(0, 0, c2.width, c2.height);
@@ -307,25 +330,11 @@ var stop = () => {
   window.cancelAnimationFrame(requestID);
 };
 
-
-var clear = (e) => {
-  console.log("clear invoked...");
-  ctx.clearRect(0, 0, c.width, c.height);
-  ctx2.clearRect(0, 0, c2.width, c2.height);
-};
-
 var reset = () => {
   location.reload();
 };
 
-// var template;
-//   function setTemplate(dropbox){
-//     template = document.getElementById(dropbox).value;
-//     window.alert(template);
-//   }
-
 // Event Listeners
 startButton.addEventListener("click", move);
 stopButton.addEventListener("click", stop);
-clearButton.addEventListener("click", clear);
 resetButton.addEventListener("click", reset);
