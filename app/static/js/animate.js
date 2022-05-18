@@ -27,25 +27,21 @@ var requestID;
 
 
 //butterfly info
-var totalB = 5;
+var totalB = parseInt(slider.value);
 var totalF = 10;
 
-// output.innerHTML = slider.value;
+output.innerHTML = slider.value;
 // totalB = parseInt(slider.value);
-//
-// slider.oninput = function() {
-//   output.innerHTML = this.value;
-//   totalB = parseInt(slider.value);
-//   console.log(totalB + " butterflies were picked.");
-// };
 
-// function setTemplate(dropbox){
-//   totalB = document.getElementById(dropbox).value;
-//   window.alert(totalB);
-//   console.log(totalB);
-// };
-
-// console.log(totalB);
+slider.oninput = function() {
+  output.innerHTML = this.value;
+  totalB = parseInt(slider.value);
+  console.log(totalB + " butterflies were picked.");
+  butterflies = []; //clears butterfly array
+  for (var i = 0; i < totalB; i++) {
+    butterflies.push(createButterfly());
+  };
+};
 
 
 // Functions
@@ -55,16 +51,16 @@ function createFlower(x, y, species, sweetness, color) {
   var dice = Math.floor(Math.random() * 4);
 
       if (dice === 0){
-          color = "pink";
+          color = 2;
           flowerImg.src = '../static/img/pink_flower.png';}
       else if (dice === 1){
-          color = "red";
+          color = 4;
           flowerImg.src = '../static/img/red_flower.png';}
       else if (dice === 2){
-          color = "black";
+          color = 0;
           flowerImg.src = '../static/img/black_flower.png';}
       else{
-          color = "yellow";
+          color = 3;
           flowerImg.src = '../static/img/yellow_flower.png';}
 
   // flowerImg.src = '../static/img/flower.png';
@@ -73,7 +69,7 @@ function createFlower(x, y, species, sweetness, color) {
   // var x = 400;
   // var y = 225;
   var sweetness = Math.floor(Math.random()*5);
-  var color = Math.floor(Math.random()*4);
+  // var color = Math.floor(Math.random()*4);
   return {x: x, y: y, img: flowerImg, species: species, sweetness: sweetness, color: color};
 };
 
@@ -249,13 +245,8 @@ function findDXDY(dice, numB, numF){
 
 function findBestFlower(num){
 
-  // closest = bubbleSort("distance", num);
-  // sweetness = bubbleSort("sweetness", num);
-  // colorful = bubbleSort("color", num);
-
   //flying
   //skipper butterfly (likes closest flowers)
-  // console.log("seeing if butterflies are skippers");
   if (butterflies[num].species === "skipper"){
     // console.log("it is a skipper!");
     findDXDY("closest", num, 0);
@@ -266,11 +257,16 @@ function findBestFlower(num){
     findDXDY("colorful", num, totalF - 1);
     // console.log("Am looking for flower " + );
   }
+  //blue morpho butterfly (likes sweetest flowers)
   else if (butterflies[num].species === "blueM"){
     // console.log("it's a blue morpho butterfly!");
     findDXDY("sweetest", num, totalF - 1);
   }
+  //clipper butterfly (associates color with sweetness)
   else{
+    //!!!
+    //after # simulation runs, make clipper like the flower color that's usually the sweetest
+    //!!!
     findDXDY("sweetest", num, totalF - 1);
   }
 };
@@ -331,7 +327,13 @@ var stop = () => {
 };
 
 var reset = () => {
-  location.reload();
+  ctx.clearRect(0, 0, c.width, c.height);
+  ctx2.clearRect(0, 0, c.width, c.height);
+  drawGarden();
+  flowers = [];
+  for (var i = 0; i < totalF; i++) {
+    flowers.push(createFlower());
+  };
 };
 
 // Event Listeners
