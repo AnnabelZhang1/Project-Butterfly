@@ -88,18 +88,18 @@ function createButterfly(x, y, dx, dy, species, rank) {
   var dice = Math.floor(Math.random() * 4);
   // console.log(dice);
   // var species = "none";
-      if (dice == 0){
-          species = "whiteC";
-          butterflyImg.src = '../static/img/whitecabbage_butterfly.png';}
-      else if (dice == 1){
-          species = "blueM";
-          butterflyImg.src = '../static/img/bluemorpho_butterfly.png';}
-      else if (dice == 2){
-          species = "clipper";
-          butterflyImg.src = '../static/img/clipper_butterfly.png';}
-      else{
-        species = "skipper";
-        butterflyImg.src = '../static/img/skipper_butterfly.png';}
+  if (dice === 0){
+      species = "whiteC";
+      butterflyImg.src = '../static/img/whitecabbage_butterfly.png';}
+  else if (dice === 1){
+      species = "blueM";
+      butterflyImg.src = '../static/img/bluemorpho_butterfly.png';}
+  else if (dice === 2){
+      species = "clipper";
+      butterflyImg.src = '../static/img/clipper_butterfly.png';}
+  else{
+    species = "skipper";
+    butterflyImg.src = '../static/img/skipper_butterfly.png';}
 
   var x = Math.random()*750;
   var y = Math.random()*550;
